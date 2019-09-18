@@ -1,13 +1,18 @@
 var express = require('express');
 
 var app = express();
+var fortune = require('./lib/fortune');
 
 var handlebars = require('express-handlebars')
 .create({defaultLayout:'main'});
 app.engine('handlebars', handlebars.engine);
-app.set('viewengine', 'handlebars');
+app.set('view engine', 'handlebars');
 
 app.set('port', process.env.PORT || 3000);
+
+app.use(express.static(__dirname+'/public'));
+
+
 
 // CUSTOM HOME PAGE
 app.get('/', function(req, res){
@@ -16,7 +21,8 @@ app.get('/', function(req, res){
 
 // CUSTOM ABOUT PAGE
 app.get('/about', function(req, res){
-    res.render('about');
+
+    res.render('about', {fortune: fortune.getFortune()});
 });
 // CUSTOM 404 PAGE
 app.use(function(req, res){
